@@ -2,25 +2,31 @@
 import Button from "@components/ui/button.astro";
 import Link from "@components/ui/link.astro";
 import { localizePath } from "astro-i18next";
+import LanguageSelector from "@components/languageselector.astro";
+import ThemeSelector from "@components/themeselector.astro";
 import { Icon } from "astro-icon/components";
 import { t } from "i18next";
 
 export const menuitems = [
 	{
-		title: "Sub items",
-		children: [
-			{ title: "Subitem 1", path: "#" },
-			{ title: "Subitem 2", path: "#" },
-			{ title: "Subitem 3", path: "#" },
-		],
+		title: "header.install",
+		path: "/pricing",
 	},
 	{
-		title: "header.pricing",
-		path: "/pricing",
+		title: "header.docs",
+		path: "/blog",
+	},
+	{
+		title: "header.tools",
+		path: "/blog",
 	},
 	{
 		title: "header.blog",
 		path: "/blog",
+	},
+	{
+		title: "header.about",
+		path: "/contact",
 	},
 	{
 		title: "header.contact",
@@ -35,9 +41,9 @@ export const menuitems = [
 	<div class="p-4 flex flex-row items-center justify-between">
 		<a
 			href={localizePath("/")}
-			class="flex gap-3 items-center text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
-			<Icon name="logo" width="30" class="dark:invert" alt="Logo" />
-			Astros
+			class="flex gap-1.5 items-center text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
+			<Icon name="logo" width="30" alt="Logo" />
+            Helix
 		</a>
 		<button class="md:hidden text-gray-500 w-10 h-10 relative focus:outline-none" @click="open = !open">
 			<span class="sr-only">Open main menu</span>
@@ -150,12 +156,12 @@ export const menuitems = [
 			}
 		</div>
 		<div class="mt-4 md:mt-0 flex flex-col md:flex-row gap-4">
-			<Link href="/login" style="outline" class="md:px-3 md:py-2 leading-6">
-				{t("header.secondary_button_text")}
-			</Link>
-			<Link href="https://github.com/zankhq/astros" class="md:px-3 md:py-2 leading-6">
-				{t("header.primary_button_text")}
-			</Link>
+            <LanguageSelector
+				showFlag={false}
+				languageMapping={{ en: "English", it: "Italiano" }}
+				class="appearance-none py-1 px-2 rounded bg-slate-100 dark:bg-stone-950"
+			/>
+            <ThemeSelector />
 		</div>
 	</nav>
 </div>

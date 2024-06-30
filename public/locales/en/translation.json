@@ -1,37 +1,37 @@
 {
 	"hero": {
-		"title": "Supercharged web development!",
-		"subtitle": "Unleashing the Power of the Web: Combines Astro, Tailwind CSS and Alpine.js to Streamline Your Web Development Process.",
-		"globe_title": "Craft Stunning, High-Performance Websites with Ease and Speed",
-		"main_button_text": "Download on github",
-		"secondary_button_text": "Go to animated version"
-	},
-	"hero_animated": {
-		"secondary_button_text": "Go to base version"
+		"title.1": "Supercharged C++",
+		"title.2": " Programming!",
+		"subtitle": "Unleashing the Power of Helix: Combines Efficiency, Flexibility, and High-Performance for Your Development Process.",
+		"globe_title": "Create Robust, High-Performance, Cross Language, Maintainable, Code with Ease and Speed",
+		"main_button_text": "Get Started",
+		"secondary_button_text": "Read the Docs"
 	},
 	"header": {
-		"features": "Features",
-		"pricing": "Pricing",
+		"install": "Install",
+		"docs": "Docs",
 		"blog": "Blog",
-		"contact": "Contacts",
-		"primary_button_text": "Download",
+		"contact": "Contact",
+		"tools": "Tools",
+		"about": "About",
+		"primary_button_text": "Get Started",
 		"secondary_button_text": "Login"
 	},
 	"features": {
 		"learn_more": "Learn more",
 		"title": "Features",
 		"subtitle": "All the tools you need",
-		"description": "Astro is a high-performance static site builder that seamlessly integrates with Tailwind CSS and Alpine.js. It allows you to build websites with ease and speed, without sacrificing on performance.",
-		"astro": "Astro is the all-in-one web framework designed for speed. Pull your content from anywhere and deploy everywhere, all powered by your favorite UI components and libraries.",
-		"alpine": "Alpine is a rugged, minimal tool for composing behavior directly in your markup. Think of it like jQuery for the modern web. Plop in a script tag and get going.",
-		"tailwind": "A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.",
-		"localization": "An astro integration of i18next + some utility components to help you translate your astro websites!",
-		"light_dark_mode": "Light/Dark mode based on tailwind classes",
-		"giscus": "A comments system powered by GitHub Discussions. Let visitors leave comments and reactions on your website via GitHub!",
-		"decapcms": "Open source content management for your Git workflow",
-		"rss": "RSS generated using @astrojs/rss",
-		"articlegenerator": "Use AI to generate your articles posts"
-	},
+		"description": "Helix is a high-performance general-purpose language that seamlessly integrates with C++, Rust, and Python. It allows you to build robust and maintainable systems with ease and speed, without sacrificing on performance.",
+		"async": "Helix supports async operations, enabling non-blocking execution of complex tasks with ease without having to manually manage threads.",
+		"pattern_matching": "Pattern matching in Helix simplifies complex conditional logic, making your code more readable and maintainable.",
+		"macros": "Helix macros provide powerful code generation capabilities, allowing you to write less boilerplate and more expressive code.",
+		"generators": "Generators in Helix provide an easy way to create iterators with the yield keyword, making it simple to work with streams of data.",
+		"error_handling": "Comprehensive error handling and error displaying can handle even the most unaccepted errors, such as seg faults - errors are only pretty printed in debug mode",
+		"data_structures": "Helix supports a variety of data structures including classes, structs, enums, and more, giving you the tools to model your data effectively.",
+		"imports": "Seamlessly import modules from C++, Rust, and Python, making Helix a perfect glue language for mixed-language projects.",
+		"type_handling": "Robust type handling features in Helix, including type inference, type casting, and type checking, ensure your code is both safe and efficient.",
+        "memory_management": "Helix provides efficient memory management features, including automatic memory allocation and garbage collection, ensuring your applications run smoothly."
+    },
 	"faq": {
 		"title": "Frequently Asked Questions"
 	},

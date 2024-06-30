@@ -4,68 +4,48 @@ import { t } from "i18next";
 
 const faqs = [
 	{
-		title: "What is this?",
-		description: "This is a astro template that uses tailwindcss and alpinejs",
+		title: "What is Helix?",
+		description: "Helix is a high-performance general-purpose programming language that seamlessly integrates with C++, Rust, and Python.",
 	},
 	{
-		title: "Why alpinejs? Why don't just use js?",
-		description:
-			"Alpine js is less than 17kb and it make javascript very fast to write, there are also various open source ready to use components like https://js.hyperui.dev, https://www.alpinetoolbox.com/examples, https://alpinejs.dev/components#components",
+		title: "Why use Helix?",
+		description: "Helix is designed to provide robust, efficient, and maintainable applications. It leverages the strengths of C++, Rust, and Python, making it a versatile choice for various programming needs.",
 	},
 	{
-		title: "But I don't need alpine js, can I remove it?",
-		description: `Of course, but some components use it and you'll have to edit these, more specifically you ll have to: <br/>
-					<ul style="list-style: inside;">
-						<li>First remove the package with the command <code>npm unistall @astrojs/alpinejs @types/alpinejs alpinejs</code></li>
-						<li>Adjust all components that uses alpine js: <code>faq.astro</code>, <code>themeselector.astro</code>, <code>navbar.astro</code></li>
-					</ul>`,
+		title: "Can I remove Helix's integration with other languages?",
+		description: `While you can technically remove Helix's integrations with C++, Rust, or Python, it is not recommended as Helix is designed to leverage these languages for maximum performance and flexibility.`,
 	},
 	{
-		title: "Can I remove also tailwidcss?",
-		description:
-			"I mean, you can, but you'll have to basically rewrite all the template, so I don't recommend it",
+		title: "How can I configure Helix for a specific environment?",
+		description: "Helix can be configured for various environments by setting the appropriate target triples. Refer to the Helix documentation for detailed configuration instructions.",
 	},
 	{
-		title: "I don't need multiple language, how can I remove it?",
-		description: `One way is to simply keep one language and remove the selector from the footer but in order to fully remove the localization you have to: <br/>
-					<ul style="list-style: inside;">
-						<li>Remove the i18next pacakage <code>npm unistall astro-i18next</code></li>
-						<li>Remove <code>astro-i18next.config.mjs</code> file</li>
-						<li>Remove <code>locales</code> folder from public</li>
-						<li>Remove <code>languageselector.astro</code> file and from footer</li>
-						<li>Find all reference to <code>i18next</code> and <code>astro-i18next</code> and replace with your text</li>
-					</ul>`,
+		title: "How does Helix handle memory management?",
+		description: "Helix uses efficient memory management techniques and provides mechanisms for manual and automatic memory management, ensuring your applications run smoothly and efficiently.",
 	},
 	{
-		title: "I don't need dark mode, how can I remove it?",
-		description:
-			"Dark mode is embedded into tailwindcss, so you can't remove it, but you can remove the switch from the navbar",
+		title: "Can I use Helix for web development?",
+		description: "Yes, Helix can be used for web development. It provides tools and integrations that make it suitable for building high-performance web applications.",
 	},
 	{
-		title:
-			"How can I configure the Sveltia CMS authentication with cloudflare?",
-		description: `To configure Sveltia CMS with cloudflare follow this guide <a href="https://github.com/sveltia/sveltia-cms" target="_blank">https://github.com/sveltia/sveltia-cms</a>`,
+		title: "How do I handle errors in Helix?",
+		description: "Helix offers comprehensive error handling capabilities. It supports traditional try-catch mechanisms and provides detailed error reporting for easier debugging and maintenance.",
 	},
 	{
-		title: "How can I configure the decap CMS authentication with netlify?",
-		description: `To configure decap CMS with netlify do the followings:
-					<ul style="list-style: inside;">
-						<li>Change NetlifyCMS config <code>config.backend.name</code> to git-gateway</li>
-						<li>Use integrated NetlifyCMS auth <a href="https://decapcms.org/docs/git-gateway-backend/#git-gateway-with-netlify" target="_blank">https://decapcms.org/docs/git-gateway-backend/#git-gateway-with-netlify</a></li>
-					</ul>`,
+		title: "How can I contribute to Helix?",
+		description: `You can contribute to Helix by visiting our GitHub repository. We welcome contributions in the form of code, documentation, and issue reporting. Follow the contribution guidelines outlined in the repository.`,
 	},
 	{
-		title: "How can I change the localization languages?",
-		description: `In order to change the languages you have to change the languages in the file <code>astro-i18next.config.mjs</code> and in the netlifyCMS configuration on the file <code>astro.config.mjs</code> <br/>
-					Then change the locales files folders in <code>public/locales</code>`,
+		title: "How do I update Helix to the latest version?",
+		description: `To update Helix to the latest version, follow the instructions provided in the Helix documentation. Ensure you have the necessary dependencies and tools installed before updating.`,
 	},
 	{
-		title: "What are the files in the funciotn folder used for?",
-		description: `These are cloudflare function that are used for the authentication to the decap CMS`,
+		title: "Where can I find Helix's documentation?",
+		description: `Helix's documentation can be found on the official website at <a href="www.helix-lang.com/docs">www.helix-lang.com/docs</a>. The documentation includes tutorials, API references, and guides to help you get started with Helix.`,
 	},
 	{
-		title: "The build on cloudflare keep failing, why?",
-		description: `One of the problem could be that the Build system version is setted to version 1, make sure that version 2 is selected`,
+		title: "What should I do if I encounter an issue with Helix?",
+		description: `If you encounter an issue with Helix, you can report it on our GitHub issues page. Please provide detailed information about the issue, including steps to reproduce it, so we can assist you effectively.`,
 	},
 ];
 ---

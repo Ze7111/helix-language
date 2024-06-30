@@ -23,8 +23,8 @@ const resolvedImageWithDomain = new URL(
 const { title, lang = null } = Astro.props;
 
 const makeTitle = title
-	? `${title} | Astros`
-	: "Astros - Starter Template for Astro with Tailwind CSS";
+	? `${title} | Helix`
+	: "Helix - High-performance, General-purpose, Interoprable Programming Language";
 ---
 
 <!doctype html>
@@ -43,21 +43,21 @@ const makeTitle = title
 		<link rel="stylesheet" href="/index.css" />
 
 		<SEO
-			title={makeTitle}
-			description="Astros is a starter website template for Astro built with TailwindCSS and alpine js."
-			canonical={canonicalURL}
-			openGraph={{
-				basic: {
-					url: canonicalURL,
-					type: "website",
-					title: `Astros - Starter Template for Astro`,
-					image: resolvedImageWithDomain,
-				},
-				image: {
-					alt: "Astros Homepage Screenshot",
-				},
-			}}
-		/>
+            title="Helix Programming Language - High-Performance Interoperable Development"
+            description="Helix is a high-performance, general-purpose programming language that seamlessly integrates with C++, Rust, and Python. Build robust, efficient, and maintainable applications with Helix."
+            canonical={canonicalURL}
+            openGraph={{
+                basic: {
+                    url: canonicalURL,
+                    type: "website",
+                    title: `Helix Programming Language - High-Performance Interoperable Development`,
+                    image: resolvedImageWithDomain,
+                },
+                image: {
+                    alt: "Helix Programming Language Homepage",
+                },
+            }}
+        />
 
 		<script is:inline>
 			function handleThemeChange() {
@@ -83,7 +83,7 @@ const makeTitle = title
 			/* Improve Page speed */
 			/* https://css-tricks.com/almanac/properties/c/content-visibility/ */
 			img {
-				content-visibility: auto;
+				content-visibility: hidden;
 			}
 		</style>
 	</body>

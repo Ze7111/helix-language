@@ -31,7 +31,7 @@ const globeMaxSize = 1000;
 			phi: 0,
 			theta: 0,
 			dark: 0,
-			diffuse: 1.2,
+			diffuse: 1.9,
 			scale: 1,
 			mapSamples: 16000,
 			mapBrightness: 5,
@@ -41,8 +41,13 @@ const globeMaxSize = 1000;
 			offset: [0, 0],
 			opacity: 0.9,
 			markers: [
-				{ location: [37.7595, -122.4367], size: 0.03 },
-				{ location: [40.7128, -74.006], size: 0.1 },
+				{ location: [25.0756, 54.8971], size: 0.03 },   // Dubai
+				{ location: [41.8829, -87.6419], size: 0.03 },  // Chicago
+				{ location: [41.0793, -85.1394], size: 0.03 },  // Fort Wayne, Indiana
+				{ location: [13.0827, 80.2707], size: 0.03 },   // Chennai, India
+				{ location: [19.076, 72.8777], size: 0.03 },    // Mumbai, India
+				{ location: [40.7128, -74.006], size: 0.03 },   // New York, USA
+				{ location: [34.0522, -118.2437], size: 0.03 }, // Los Angeles, USA
 			],
 			onRender: (state) => {
 				// Called on every animation frame.

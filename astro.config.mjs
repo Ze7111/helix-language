@@ -11,7 +11,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://astros.zank.studio",
+	site: "https://helix-lang.com",
 	vite: {
 		define: {
 			__DATE__: `'${new Date().toISOString()}'`,
@@ -29,8 +29,8 @@ export default defineConfig({
 			includeAssets: ["favicon.svg"],
 			registerType: "autoUpdate",
 			manifest: {
-				name: "Astros - Starter Template for Astro with Tailwind CSS",
-				short_name: "Astros",
+				name: "Helix Website - This is the website for the Helix Programing Language",
+				short_name: "Helix",
 				theme_color: "#ffffff",
 				icons: [
 					{
