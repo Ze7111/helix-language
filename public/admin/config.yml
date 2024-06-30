@@ -4,7 +4,7 @@ logo_url: /logo.svg
 
 backend:
     name: "github"
-    repo: zankhq/astros
+    repo: kneorain/helix-site
     branch: main
     base_url: https://cms.majestico.workers.dev
     automatic_deployments: false

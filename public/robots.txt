@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://astros.zank.studio/sitemap-index.xml
+Sitemap: http://www.helix-lang.com/sitemap-index.xml

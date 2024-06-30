@@ -1,0 +1,195 @@
+---
+title: Hello World
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Welcome to Helix! It's traditional when learning a new language to write a program that prints "Hello, World!" to the screen. We'll follow this tradition here.
+
+:::note
+This guide assumes basic familiarity with the command line. Helix makes no specific demands about your editing tools or where your code lives. Feel free to use your favorite IDE. Many IDEs support Helix; check their documentation for details.
+:::
+
+## Writing and Running a Helix Program
+
+First, create a new directory for your Helix project. Ideally in `~/projects/hello_world`
+Next, create a new source file and call it `main.hlx`. Helix files use the `.hlx` extension. If you're using more than one word in your filename, use an underscore to separate them (e.g., `hello_world.hlx`).
+
+Open the `main.hlx` file you just created and enter the following code:
+
+```Helix title="main.hlx"
+fn main() {
+    print("Hello, World!");
+}
+```
+
+### Compiling and Running the Program
+
+Save the file and return to your terminal in the `~/projects/hello_world` directory. To compile your Helix program, run:
+
+```sh
+helix main.hlx
+```
+
+This command tells the Helix compiler to compile `main.hlx` and output an executable named `hello_world`.
+
+To run your compiled program, use the following command:
+
+:::tip
+Unix is also MacOS, Linux and Linux like operating systems.
+:::
+
+<Tabs>
+    <TabItem label="Windows">
+        ```powershell
+        .\main.exe
+        ```
+
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        ./main
+        ```
+    </TabItem>
+
+</Tabs>
+
+You should see the output:
+
+```ansi
+Hello, World!
+```
+
+Congratulations! You've written and run your first Helix program. You're officially a Helix programmer—welcome!
+
+## Writing a Helix Program Without a Main Function
+
+Helix provides a feature that allows you to write programs without explicitly defining a `main` function, similar to scripting languages like Python. This is done using the `#[no-entry]` attribute.
+
+Create a new file called `hello_no_entry.hlx` and enter the following code:
+
+```Helix  title="hello_no_entry.hlx"
+#[no-entry]
+
+print("Hello, World!");
+```
+
+This code does not include an explicit `main` function. The `#[no-entry]` attribute allows the compiler to automatically determine what needs to go into the main function. However, using `#[no-entry]` can cause undefined behavior, so it is not recommended for complex programs.
+
+### Compiling and Running the No-Entry Program
+
+To compile this Helix program, run:
+
+```sh
+helix hello_no_entry.hlx
+```
+
+To run the compiled program, use the following command:
+
+<Tabs>
+    <TabItem label="Windows">
+        ```powershell
+        .\hello_no_entry.exe
+        ```
+
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        ./hello_no_entry
+        ```
+    </TabItem>
+
+</Tabs>
+
+You should see the output:
+
+```ansi
+Hello, World!
+```
+
+## Anatomy of a Helix Program
+
+Let's review the "Hello, World!" program in detail:
+
+### The Main Function
+
+```Helix
+fn main() {
+}
+```
+
+These lines define a function named `main`. The `main` function is special: it is always the first code that runs in every executable Helix program. Here, the first line declares a function named `main` that has no parameters and returns nothing. If there were parameters, they would go inside the parentheses `()`.
+
+The function body is wrapped in `{}`. Helix requires curly brackets around all function bodies. It's good style to place the opening curly bracket on the same line as the function declaration, with one space in between.
+
+### The Print Statement
+
+```Helix
+print("Hello, World!");
+```
+
+This line does all the work in this little program: it prints text to the screen. There are several important details here:
+
+1. **Indentation:** Helix style uses four spaces for indentation, not tabs.
+2. **Fucntions:** `print` calls a Helix function, that would call the internal std::out fucntion to print.
+3. **Strings:** The `"Hello, World!"` string is passed as an argument to `print`, and the string is printed to the screen.
+4. **Semicolons:** The line ends with a semicolon `;`, which indicates that the statement is complete.
+
+## Compiling and Running Are Separate Steps
+
+You've just run a newly created program, so let's examine each step in the process.
+
+Before running a Helix program, you must compile it using the Helix compiler by entering the `helix` command and passing it the name of your source file, like this:
+
+```sh
+helix main.hlx -o hello_world --debug
+```
+
+After compiling successfully, Helix outputs a binary executable. On Linux, macOS, and PowerShell on Windows, you can see the executable by entering the `ls` command in your shell:
+
+<Tabs>
+    <TabItem label="Windows">
+        ```powershell
+        dir /B
+
+        main.hlx
+        hello_world
+        hello_world.exe
+        ```
+
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        ls
+
+        main.hlx  hello_world  hello_world.pdb
+        ```
+    </TabItem>
+
+</Tabs>
+
+This shows the source code file with the `.hlx` extension and the executable file (`hello_world.exe` on Windows, but `hello_world` on other platforms). From here, you run the executable file like this:
+You would also notice a file with the `.pdb` extension if your on windows, thats used by the debugger to understand errors and tracebacks, to allow you to see what bugs there are in your code if any.
+
+<Tabs>
+    <TabItem label="Windows">
+        ```powershell
+        .\hello_world.exe
+        ```
+
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        ./hello_world
+        ```
+    </TabItem>
+
+</Tabs>
+
+If your `main.hlx` is your “Hello, World!” program, this line prints `Hello, World!` to your terminal.
+
+Helix is an ahead-of-time compiled language, meaning you can compile a program and give the executable to someone else, and they can run it even without having Helix installed.
+
+Just compiling with `helix` is fine for simple programs, but as your project grows, you'll want to manage all the options and make it easy to share your code. Future sections will introduce tools and best practices for writing real-world Helix programs.
+
+Happy coding!

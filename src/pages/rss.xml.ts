@@ -12,8 +12,8 @@ export const get = async () => {
 	);
 
 	return rss({
-		title: `Astros`,
-		description: "Astros - Starter Template for Astro with Tailwind CSS",
+		title: `Helix`,
+		description: "Helix - The website for the Helix Programing Language",
 		site: import.meta.env.SITE,
 
 		items: posts.map((post) => ({
