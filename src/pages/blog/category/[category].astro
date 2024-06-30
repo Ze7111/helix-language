@@ -1,38 +1,51 @@
 ---
-import BlogHeader from "@/components/blog-header.astro";
-import BlogCard from "@/components/cards/blog-card.astro";
-import MainLayout from "@/layouts/main-layout.astro";
-import { getPostsByCategory } from "@/lib/fetchers";
-import { capitalizer } from "@/lib/utils";
 import { getCollection } from "astro:content";
+import Pagination from "@components/blog/pagination.astro";
+import Posts from "@components/blog/posts.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import Layout from "@layouts/Layout.astro";
+import i18next, { changeLanguage } from "i18next";
+
+changeLanguage("en");
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { category: post.data.category },
-  }));
+	changeLanguage("en");
+	const posts = await getCollection("blog", ({ data }) => {
+		return !data.draft && data.publishDate < new Date();
+	});
+	const localizedPosts = posts.filter((page) => {
+		const [lang, ...slug] = page.slug.split("/");
+		return lang === i18next.language;
+	});
+	const categories = new Set();
+	localizedPosts.map((post) => {
+		typeof post.data.category === "string" &&
+			categories.add(post.data.category.toLowerCase());
+	});
+	return Array.from(categories).map((category) => {
+		return {
+			params: { category: category },
+			props: {
+				posts: localizedPosts.filter(
+					(post) => typeof post.data.category === "string",
+				),
+				category: category,
+				lang: i18next.language,
+			},
+		};
+	});
 }
-
-const { category } = Astro.params;
-
-if (!category) {
-  return new Response(null, {
-    status: 404,
-    statusText: "Not found",
-  });
-}
-
-const posts = await getPostsByCategory(category);
+// Get the post directly from the prop on render
+const { posts, category, lang } = Astro.props;
 ---
 
-<MainLayout title={`${capitalizer(category)} | Blog`} description={`All posts for ${category} category`}>
-  <section class="container py-10">
-    <BlogHeader title={`Posts by ${category} category`} />
-
-    <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-9 md:gap-y-16 lg:gap-x-8"
-    >
-      {posts.map((post) => <BlogCard {...post} />)}
-    </div>
-  </section>
-</MainLayout>
+<Layout title="Blog">
+	<Container>
+		<Sectionhead>
+			<Fragment slot="title">#{category}</Fragment>
+			<Fragment slot="desc">We write about building startups and thoughts going on our mind.</Fragment>
+		</Sectionhead>
+		<Posts posts={posts} />
+	</Container>
+</Layout>
