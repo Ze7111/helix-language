@@ -59,7 +59,8 @@ export default defineConfig({
         }),
         icon(),
         starlight({
-            title: 'Helix Docs',
+            title: 'Helix',
+
             logo: {
                 src: "/public/logo.svg",
                 replacesTitle: false,
@@ -70,7 +71,7 @@ export default defineConfig({
             social: {
                 github: 'https://github.com/kneorain/helix',
             },
-            customCss: process.env.NO_GRADIENTS ? [] : ["/src/styles/docstyle.css"],
+            customCss: ["/src/styles/docstyle.css"],
             expressiveCode: {
                 themes: ['one-dark-pro', 'one-light'],
                 shiki: {
@@ -80,7 +81,46 @@ export default defineConfig({
                 },
                 styleOverrides: { borderRadius: '0.2rem' },
             },
+            sidebar: [
+                {
+                    label: 'Welcome To Helix',
+                    link: 'docs',
+                },
+                {
+                    label: 'Introduction',
+                    link: 'docs/introduction',
+                },
+                {
+                    label: 'Installation',
+                    link: 'docs/installation',
+                },
+                {
+                    label: 'Getting Started',
+                    autogenerate: { directory: 'docs/getting-started' },
+                },
+                {
+                    label: 'Language',
+                    badge: 'New',
+                    autogenerate: { directory: 'docs/language' },
+                },
+                {
+                    label: 'Examples',
+                    badge: 'New',
+                    autogenerate: { directory: 'docs/examples' },
+                },
+                {
+                    label: 'Reference',
+                    autogenerate: { directory: 'docs/reference' },
+                },
+                {
+                    label: 'Appendix',
+                    badge: 'New',
+                    autogenerate: { directory: 'docs/appendix' },
+                },
+            ],
             tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
+            lastUpdated: true,
+            disable404Route: true,
         })
     ],
     markdown: {

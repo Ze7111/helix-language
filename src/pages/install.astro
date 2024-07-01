@@ -71,14 +71,18 @@ const pricingData = [
 <Layout title="Pricing">
 	<Container>
 		<Sectionhead>
-			<Fragment slot="title">Pricing</Fragment>
-			<Fragment slot="desc">Affordable Excellence: See Our Pricing.</Fragment>
+			<Fragment slot="title">Installing Helix (recomended way)</Fragment>
+			<Fragment slot="desc">Two ways, either install a pre-built binary or install with a shell script.</Fragment>
 		</Sectionhead>
 
-		<div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-20">
-			{pricingData.map((item) => <Pricing plan={item} />)}
-		</div>
-		<!-- <Logos /> -->
-		<Faq />
+        <Sectionhead>
+			<Fragment slot="title">Installing Helix (building from source)</Fragment>
+			<Fragment slot="desc">This way consists of a quite lengthy process that involves building the compiler from source.</Fragment>
+		</Sectionhead>
+
+        <Sectionhead>
+			<Fragment slot="title">Adding helix to PATH</Fragment>
+			<Fragment slot="desc">This is applicable to all the installation methods.</Fragment>
+		</Sectionhead>
 	</Container>
 </Layout>

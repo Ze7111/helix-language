@@ -22,7 +22,8 @@ This project is a modified version of the template [Astros](http://astros.zank.s
 
 ![Alt text](.github/images/pagespeed-small.png)
 
-![Helix Preview](.github/images/helix-preview.png)
+![Helix-Site Dark Preview](.github/images/dark-preview.png)
+![Helix-Site Light Preview](.github/images/light-preview.png)
 
 ## 🧪 Test
 

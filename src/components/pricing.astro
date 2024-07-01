@@ -14,7 +14,9 @@ const { plan } = Astro.props;
 			{plan.price && typeof plan.price === "object" ? plan.price.monthly : plan.price}
 		</span>
 	</p>
-	<Link href="#" aria-describedby="tier-enterprise" style="outline" class="block w-full mt-6">{plan.button.text || "Get Started"}</Link>
+	<!--- make a spacer to make sure all the buttons of this inst are in the same height -->
+    <div class="flex-grow"></div>
+    <Link href={plan.button.link} aria-describedby="tier-enterprise" style="outline" class="block w-full mt-6">{plan.button.text || "Learn More"}</Link>
 	<ul role="list" class="mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-gray-300 xl:mt-10">
 		{
 			plan.features.map((item) => (
