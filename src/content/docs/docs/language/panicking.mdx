@@ -3,7 +3,7 @@ title: Panicking
 description: Comprehensive guide to the `panic` statement in Helix, its behavior, and best practices for error handling.
 ---
 
-import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
 ## Panic in Helix
 
@@ -30,7 +30,7 @@ In Helix, **`panic`** is a special statement used to signal an error by returnin
 #### With Questionable Types (`?`)
 
 When a function's return type is a questionable type, `panic` sets the return value to an error. This value can then be validated using `...?` or `error in ...` syntax.
-Refer to the [Questionable Types Guide](../questionable-types) for more details on questionable types.
+Refer to the [Questionable Types Guide](../questionable) for more details on questionable types.
 
 ```helix
 import std::errors;
@@ -290,3 +290,13 @@ fn main() {
 The **`panic` statement** in Helix is a powerful and integrated error-handling mechanism. By leveraging questionable types (`?`) or `std::Error::<T, E...>`, you can create predictable and robust error propagation paths.
 
 Ensure every `panic` is handled gracefully with checks (`...?`, `error in ..`, `.has_value()`) and explicitly extract values where needed. This design keeps Helix code clean, safe, and predictable.
+
+### References
+
+<CardGrid>
+    <LinkCard
+        title="Questionable Types"
+        description="Learn about nullable and error-prone data handling in Helix."
+        href="../questionable"
+    />
+</CardGrid>

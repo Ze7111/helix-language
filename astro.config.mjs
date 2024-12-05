@@ -69,7 +69,7 @@ export default defineConfig({
                 baseUrl: 'https://github.com/helixlang/helix-site/edit/new-template/src/content/docs/docs/',
             },
             social: {
-                github: 'https://github.com/helixlang/helix',
+                github: 'https://github.com/helixlang/helix-lang',
             },
             customCss: ["/src/styles/docstyle.css"],
             expressiveCode: {

@@ -3,7 +3,7 @@ title: Questionable
 description: Comprehensive guide to using questionable types in Helix, their behavior, and best practices for error and null handling.
 ---
 
-import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
 ## Questionable Types (?)
 
@@ -114,7 +114,7 @@ A questionable type can hold one of three states:
     <TabItem label="Error">
     - **errors** can not be assigned directly. Since they are the panicked state of a function.
     - They can be assigned as a result of a function call. but not directly.
-    - refer to [Panic](../panic) for more information.
+    - refer to [Panic](../panicking) for more information.
     ```helix
     let x: int? = divide(10, 0); // Holds an error
     ```
@@ -256,3 +256,18 @@ if x?:
 ### Conclusion
 
 Questionable types (`?`) in Helix are a powerful tool for managing nullable and error-prone data. By embedding error and null handling into the type system, Helix enables clean, concise, and safe code. Use `...?`, `in`, and `error in ...` to validate questionable types and write robust programs.
+
+### References
+
+<CardGrid>
+    <LinkCard
+        title="Panic"
+        description="Learn about error handling and panics in Helix."
+        href="../panicking"
+    />
+    <LinkCard
+        title="Functions"
+        description="Explore how functions work in Helix and best practices for defining them."
+        href="../functions"
+    />
+</CardGrid>

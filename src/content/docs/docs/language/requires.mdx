@@ -1,3 +1,387 @@
 ---
 title: Requires (Generics/Type Bounds)
+description: A detailed guide to the `requires` keyword in Helix for generics, constraints, and conditional type logic.
 ---
+
+import { CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Introduction to `requires`
+
+The `requires` keyword in Helix enables powerful generics and type constraints. By explicitly defining what types or constraints are allowed, it ensures robust and reusable constructs. The `requires` keyword can be used in the following constructs:
+
+- [**Structs**](../structs)
+- [**Classes**](../classes)
+- [**Operators**](../operators)
+- [**Functions**](../functions)
+- [**Type Definitions**](../type-system)
+
+---
+
+### Syntax Overview
+
+The `requires` keyword introduces generic parameters, optionally constrained by types or conditional logic.
+
+#### Grammar Reference
+
+```ebnf
+RequiresDecl  ::= `requires` `<` ((`const`? Ident `:` Type) | Ident) (`,` ((`const` Ident `:` Type) | Ident))*? `>` TypeBoundDecl?
+TypeBoundDecl ::= `if` BinaryExpr | PrimaryExpr
+```
+
+This grammar indicates:
+1. A `requires` clause defines one or more generic parameters.
+2. Parameters can optionally include:
+   - `const` for constant values.
+   - A constraint (`:` Type) specifying the expected type.
+3. A `requires` clause may optionally be followed by a `TypeBoundDecl` for additional type contracts/bounds logic using `if`.
+
+---
+
+<Aside type="caution" title="Understanding `requires` and its Implications">
+The `requires` keyword in Helix is a **zero-cost abstraction**, ensuring that all generic constructs are resolved entirely at compile-time. This provides several benefits:
+
+- **Optimal Performance**: Functions, structs, and other constructs using `requires` are expanded at compile-time into type-specific implementations. This eliminates runtime overhead and ensures that your code remains efficient.
+- **Type-Safe Code Expansion**: Each instance of a construct is generated with precise type information, catching errors early during compilation.
+
+### Important Considerations
+
+1. **Interop Limitations**:
+   - Functions or constructs that use `requires` cannot be directly accessed from external languages, such as C, if the Helix code is compiled into a shared library. This is because the compiler generates specific implementations for each type at compile-time, and these implementations do not produce a generic entry point for dynamic linking.
+   - Helix has complete support for **C++ templates**, as long as its in a header file.
+
+2. **Code Expansion**:
+   Since `requires` generates specialized versions of constructs for each type, it can lead to:
+   - **Increased Binary Size**: Multiple type-specific implementations may result in larger compiled binaries.
+   - **Error Complexity**: Compilation errors within `requires` constructs may be verbose and reflect type-specific expansions, making them harder to interpret.
+
+<Aside type="note" title="Best Practices">
+To ensure maintainable and efficient use of `requires`:
+- Use it judiciously for genuinely generic and reusable constructs.
+- Test generic constructs with diverse types to uncover potential edge cases early.
+- Be mindful of the potential for increased binary size and optimize where necessary.
+</Aside>
+</Aside>
+
+---
+
+### Using `requires` in Constructs
+
+#### Functions
+
+You can attach the `requires` clause to a function definition after its signature to define generic functions:
+
+```helix
+fn max(a: T, b: T) -> T
+  requires <T> if T has Comparable {
+    return a > b ? a : b;
+}
+```
+
+- **Explanation**:
+  - `T` is a generic type.
+  - The function works only for types that implement the `Comparable` interface.
+  - For more info on `has`, `derives` refer to [Type System](../type-system).
+
+For a more generic function (without constraints), would only take the `requires` clause:
+
+```helix
+fn print_value(value: T)
+  requires <T> {
+    print(value);
+}
+```
+
+- **Explanation**:
+  - The function accepts any type `T`.
+
+#### Structs
+
+The `requires` clause enables generics for structs:
+
+```helix
+struct Container requires <T> {
+    let value: T;
+}
+```
+
+- **Explanation**:
+  - `Container` holds a value of type `T`.
+
+##### Adding Constraints to Structs
+
+```helix
+struct Box requires <T: Storable> {
+    let data: T;
+}
+```
+
+- **Explanation**:
+  - `T` must be of type `Storable`.
+
+If we want a slightly less strict constraint, we can use `derives`:
+
+```helix
+struct Box requires <T>
+  if T derives Storable {
+    let data: T;
+}
+```
+
+- **Explanation**:
+  - `T` must derive from `Storable`. (OOP inheritance hierarchy)
+
+#### Classes
+
+Similar to structs, classes can use the `requires` clause for generics:
+
+```helix
+class Cache requires <K, V>
+  if K has Hashable {
+    let storage: map::<K, V>;
+
+    fn set(key: K, value: V) {
+        self.storage.insert(key, value);
+    }
+}
+```
+
+- **Explanation**:
+  - `K` must be implement `Hashable`. Refer to [Interfaces](../interfaces) for more on how to define and implement interfaces.
+  - `V` is a value type without additional constraints.
+
+#### Operators
+
+Operators can also use `requires` to generalize their behavior:
+
+```helix
+class Number {
+    let value: int = 0;
+
+    op - fn (self, b: T) -> T
+      requires <T> if T has Subtractable {
+        return self.value - b;
+    }
+}
+```
+
+- **Explanation**:
+  - This generic operator works for any type `T` that supports the subtraction operator.
+
+#### Type Definitions
+
+The `requires` clause can define generic type aliases:
+
+```helix
+type Pair requires <T, U> = (T, U); // tuple of two types
+```
+
+- **Explanation**:
+  - `Pair` is a generic type holding two related values.
+  - Usage: `let p: Pair::<int, string> = (10, "Helix");`
+
+---
+
+### Conditional Constraints
+
+Helix allows logical expressions in `requires` clauses to define more complex constraints.
+
+#### Example: Logical Constraints
+```helix
+fn validate(value: T) -> bool
+  requires <T> if T has Number || T has String {
+    return true;
+}
+```
+
+- **Explanation**:
+  - The function accepts only numbers or strings.
+
+#### Example: Combining Multiple Parameters
+```helix
+struct Graph requires <N, E>
+  if N derives Node && E derives Edge {
+    let nodes: list::<N>;
+    let edges: list::<E>;
+}
+```
+
+- **Explanation**:
+  - `N` and `E` are constrained to types deriving `Node` and `Edge`, respectively.
+
+---
+
+### Type Bounds (Advanced)
+
+The `if` keyword in the `requires` clause allows you to specify type bounds for generic parameters.
+They can be any valid expression that evaluates to a boolean value. For example:
+
+```helix
+struct CheckType requires <T: const> {
+    static let is_const = true;
+}
+
+struct CheckType requires <T> {
+    static let is_const = false;
+}
+
+fn only_const()
+  requires <T> if CheckType::<T>::is_const {
+    // Do something
+}
+
+fn only_not_const()
+  requires <T> if !CheckType::<T>::is_const {
+    // Do something else
+}
+
+fn main() {
+    only_const::<const int>(); // Compiles
+    only_not_const::<int>();   // Compiles
+
+    // The following would not compile
+    only_const::<int>();           // error: no matching function
+    only_not_const::<const int>(); // error: no matching function
+}
+```
+
+- **Explanation**:
+  - The `CheckType` struct has two overloads based on the `T` type being `const` or not.
+  - The `only_const` function only works with `const` types since if a type thats const is passed it would call the first overload of `CheckType` that sets `is_const` to `true`.
+  - The `only_not_const` function only works with non-`const` types since if a type thats not const is passed it would call the second overload of `CheckType` that sets `is_const` to `false` and negates it.
+
+---
+
+### Checking the Type of a Generic outside the `requires` Clause
+
+You can check the type of a generic parameter outside the `requires` clause using the `has` or `derives` operator:
+
+```helix
+fn to_string(value: T) -> string
+  requires <T> {
+
+    eval if T has String {
+        return value as string;
+    } else eval if T has Displayable {
+        return value.show();
+    } else {
+        return "Unknown";
+    }
+}
+```
+
+- **Explanation**:
+  - The function converts the generic value to a string based on its type.
+  - The `eval if` construct allows conditional logic based on the type of `T`.
+  - At compile-time, the correct branch is chosen based on the type of `T`.
+  - This is a powerful zero-cost abstraction that ensures type safety. While being as dynamic as python with types.
+
+Refer to [Type System](../type-system) for more about helix's powerful type system.
+
+---
+
+### Examples and Use Cases
+
+<Tabs>
+<TabItem label="Function Example">
+```helix
+fn min(a: T, b: T) -> T
+  requires <T> if T has Comparable {
+    return a if a < b else b;
+}
+
+fn main() {
+    let result = min(10, 20); // the types of T are inferred
+    print(result);            // Outputs: 10
+}
+```
+</TabItem>
+<TabItem label="Struct Example">
+```helix
+struct Holder with Displayable
+  requires <T> if T has Displayable {
+    let item: T;
+
+    fn display(self) {
+        self.item.display();
+    }
+}
+
+fn main() {
+    let h = Holder { item = "Hello, Helix!" };
+    h.display(); // Outputs: Hello, Helix
+}
+```
+</TabItem>
+<TabItem label="Operator Example">
+```helix
+op == fn eq(a: T, b: T) -> bool
+  requires <T> if T has Equatable {
+    return a.equals(b);
+}
+
+fn main() {
+    let is_equal = 10 == 20;
+    print(is_equal); // Outputs: false
+}
+```
+</TabItem>
+</Tabs>
+
+---
+
+### Common Errors and Pitfalls
+
+- **Ambiguous Constraints**: Avoid ambiguous constraints that can lead to compile-time errors. For example:
+    ```helix
+    fn print_value(value: T)
+        requires <T> {
+        print(value);
+    }
+
+    fn print_value(value: T)
+        requires <T> if T has Displayable {
+        print(value.show());
+    }
+    ```
+    - This would result in an ambiguous call error.
+    - Since both functions take a generic, but the first function would be called for any type, and the second function would be called for any type that implements `Displayable`.
+    - This would result in a compile-time error since the compiler wouldn't know which function to call. As both functions are valid for a type that implements `Displayable`.
+    - To fix this, you can either remove the first function or add a constraint to the first function that would make it more specific than the second function.
+
+- **Overly Specific Constraints**: Avoid constraints that are too specific and limit the reusability of your code. For example:
+    ```helix
+    struct Box requires <T: int> {
+        let data: T;
+    }
+    ```
+    - This would limit the `Box` struct to only work with `int`'s and not any other type (even if it derives from `int`).
+    - To fix this, you can remove the constraint or make it more general. Or add a type bound that would allow any type that derives from an `int`.
+
+---
+
+<Aside type="tip" title="Tips for Using `requires`">
+1. **Define Clear Constraints**: Always specify meaningful constraints to make your code more readable and robust.
+2. **Use Conditional Logic Where Needed**: Combine `if` with logical operators to express nuanced requirements.
+3. **Document Every Generic Parameter**: Clarify the purpose of each generic type and constraint in your code comments.
+</Aside>
+
+---
+
+### Conclusion
+
+The `requires` keyword in Helix is a powerful tool for defining generic types and constraints. By specifying the expected types and conditions, you can ensure type safety and robustness in your code. Use `requires` in functions, structs, classes, operators, and type definitions to create reusable and flexible constructs.
+
+### References
+
+<CardGrid>
+    <LinkCard
+        title="Type System"
+        description="More about Helix's powerful type system and how to use it effectively."
+        href="../type-system"
+    />
+    <LinkCard
+        title="Interfaces"
+        description="How to define and implement interfaces in Helix for robust code design."
+        href="../interfaces"
+    />
+</CardGrid>

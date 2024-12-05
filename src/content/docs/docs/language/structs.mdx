@@ -3,12 +3,15 @@ title: Structures
 description: Comprehensive guide to using structs in Helix for storing aggregate types.
 ---
 
-import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
 ## Structs in Helix
 
 In Helix, **structs** are used exclusively for storing aggregate types. Unlike classes, structs cannot have methods, constructors, or derived relationships. However, they can:
+- Contain other structs.
 - Contain variables (fields).
+- Contain Type Aliases/Definitions.
+- Contain anonymous or named enumerations.
 - Overload anonymous operators (`op` without aliases).
 - Use interfaces with the `with` keyword to implement variables and operators.
 
@@ -66,7 +69,7 @@ Even though implicit initialization is valid, relying on it in these scenarios c
 Structs can define **generic parameters** using the `requires` keyword. This allows you to create structs that can store or manipulate data types generically.
 
 #### Syntax Overview
-The `requires` declaration specifies type parameters and optionally enforces constraints on those parameters. Constraints are covered in more detail in [Requires](../requires.mdx).
+The `requires` declaration specifies type parameters and optionally enforces constraints on those parameters. Constraints are covered in more detail in [Requires](../requires).
 
 ```helix
 struct Box requires <T> {
@@ -90,7 +93,7 @@ fn main() {
 ```
 
 <Aside type="note" title="More on `requires`">
-This example introduces the basics of generics in structs. For advanced usage, including type constraints, refer to [Requires](../requires.mdx).
+This example introduces the basics of generics in structs. For advanced usage, including type constraints, refer to [Requires](../requires).
 </Aside>
 
 ---
@@ -137,7 +140,7 @@ fn main() {
 ```
 
 <Aside type="note" title="More on Operators">
-This guide introduces the basics of operator overloading for structs. For a detailed discussion of operators, including aliases and advanced usage, refer to [Operators](../operators.mdx).
+This guide introduces the basics of operator overloading for structs. For a detailed discussion of operators, including aliases and advanced usage, refer to [Operators](../operators).
 </Aside>
 
 ---
@@ -247,7 +250,7 @@ fn main() {
 ```
 
 <Aside type="note" title="Extending Structs">
-This example demonstrates how to extend a struct to implement additional functionality. For more details on extending structs, refer to the [Extending Types](../extending-types.mdx) guide.
+This example demonstrates how to extend a struct to implement additional functionality. For more details on extending structs, refer to the [Extending Types](../extending-types) guide.
 </Aside>
 
 ---
@@ -267,6 +270,17 @@ This example demonstrates how to extend a struct to implement additional functio
 
 Structs in Helix are lightweight and efficient for storing aggregate data. By restricting their functionality to fields and anonymous operators, Helix ensures that structs remain simple and focused on their purpose.
 
-For more information:
-- Refer to [Requires](../requires.mdx) for advanced details on generics and constraints.
-- Explore [Operators](../operators.mdx) for a comprehensive guide to operator overloading in Helix.
+### References
+
+<CardGrid>
+    <LinkCard
+        title="Requires"
+        description="How to use the `requires` keyword with structs to create generic types."
+        href="../requires"
+    />
+    <LinkCard
+        title="Operators"
+        description="Learn how to overload operators for structs in Helix."
+        href="../operators"
+    />
+</CardGrid>
