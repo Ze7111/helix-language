@@ -1,0 +1,272 @@
+---
+title: Structures
+description: Comprehensive guide to using structs in Helix for storing aggregate types.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Structs in Helix
+
+In Helix, **structs** are used exclusively for storing aggregate types. Unlike classes, structs cannot have methods, constructors, or derived relationships. However, they can:
+- Contain variables (fields).
+- Overload anonymous operators (`op` without aliases).
+- Use interfaces with the `with` keyword to implement variables and operators.
+
+Structs are a lightweight and efficient way to organize data that does not require the additional functionality of classes.
+
+<Aside type="caution" title="Structs vs. Classes">
+- Structs are purely for data storage and **cannot have functions or constructors**.
+- Classes, on the other hand, support functions, constructors, inheritance (`derives`), and interface implementation with both operators and methods.
+</Aside>
+
+---
+
+### Declaring Structs
+
+To declare a struct, use the `struct` keyword followed by the name of the struct and its fields.
+
+```helix
+struct Point {
+    let x: int;
+    let y: int;
+}
+```
+
+#### Creating Struct Instances
+Structs do not have constructors. Instead, you initialize them directly by assigning values to their fields:
+
+- **Implicit Object Initialization**: `{ .field1 = value1, .field2 = value2 }` syntax. This syntax does requires the type to be specified.
+```helix
+fn main() {
+    let p: Point = { .x = 10, .y = 20 };
+    print(f"Point: ({p.x}, {p.y})");
+}
+```
+
+- **Explicit Object Initialization**: Using the `Point { x = 10, y = 20 }` syntax. This syntax does not require the type to be specified.
+```helix
+fn main() {
+    let p = Point { x = 10, y = 20 }; // type can be inferred
+    print(f"Point: ({p.x}, {p.y})");
+}
+```
+
+<Aside type="danger" title="Struct Initialization">
+While Helix supports both implicit and explicit initialization of structs, it's often better to use **explicit initialization** when the type isn't immediately clear in the current context.
+
+For example, consider a function that spans over 200 lines (a practice best avoided). If the function's return statement is a struct, the type might not be easily visible at the point in the code where the `return` statement is. In such cases, explicit initialization improves readability and makes the code more maintainable by clearly indicating the type being used.
+
+Even though implicit initialization is valid, relying on it in these scenarios can make the code harder to understand and illegible to anyone reading it later (including yourself).
+</Aside>
+
+---
+
+### Using `requires` with Structs
+
+Structs can define **generic parameters** using the `requires` keyword. This allows you to create structs that can store or manipulate data types generically.
+
+#### Syntax Overview
+The `requires` declaration specifies type parameters and optionally enforces constraints on those parameters. Constraints are covered in more detail in [Requires](../requires.mdx).
+
+```helix
+struct Box requires <T> {
+    let value: T;
+}
+```
+
+#### Example: Struct with Requires
+```helix
+struct Box requires <T> {
+    let value: T;
+}
+
+fn main() {
+    let int_box: Box::<int>    = { .value = 42 };
+    let str_box: Box::<string> = { .value = "Hello, Helix" };
+
+    print(int_box.value); // Outputs: 42
+    print(str_box.value); // Outputs: Hello, Helix
+}
+```
+
+<Aside type="note" title="More on `requires`">
+This example introduces the basics of generics in structs. For advanced usage, including type constraints, refer to [Requires](../requires.mdx).
+</Aside>
+
+---
+
+### Structs `with` Interfaces
+
+Structs can implement variables and anonymous operators (`op`) from interfaces using the `with` keyword. However:
+- Only variables and operators are supported.
+- Functions in interfaces cannot be implemented by structs.
+
+<Aside type="caution" title="self vs. struct name">
+When implementing an interface, use `self` to refer to the struct instance. self is unique to each instance of the struct, while the struct name refers to the struct type itself.
+</Aside>
+
+#### Example: Struct with Interface
+```helix
+interface Movable {
+    let dx: int;
+    let dy: int;
+
+    op + fn (self, other: &Movable) -> &Movable;
+}
+
+struct Point with Movable {
+    let dx: int; // Implementing dx from Movable
+    let dy: int; // Implementing dy from Movable
+
+    //       Implementing the + operator
+    op + fn (self, other: &Point) -> &Point {
+        self.dx += other.dx;
+        self.dy += other.dy;
+
+        return self;
+    }
+}
+
+fn main() {
+    let p1 = Point { x = 10, y = 20, dx = 0, dy = 0 };
+    let p2 = Point { x = 5,  y = 15, dx = 0, dy = 0 };
+
+    let p3 = p1 + p2; // Calls the overloaded + operator
+    print(f"New Point: ({p3.x}, {p3.y})");
+}
+```
+
+<Aside type="note" title="More on Operators">
+This guide introduces the basics of operator overloading for structs. For a detailed discussion of operators, including aliases and advanced usage, refer to [Operators](../operators.mdx).
+</Aside>
+
+---
+
+### Operator Overloading
+
+Structs can overload **anonymous operators** (operators without an alias). This allows intuitive usage such as `a + b` instead of explicit function calls.
+
+<Aside type="caution" title="No Aliased Operators">
+Structs **cannot** define aliased operators (e.g., `op + fn add(...)`). Only anonymous operators (e.g., `op + fn (...)`) are allowed.
+</Aside>
+
+#### Example: Overloading Arithmetic Operators
+```helix
+struct Vector {
+    let x: float;
+    let y: float;
+
+    op + fn (self, other: &Vector) -> Vector {
+        // we are using implicit object creation here because it doesn't affect readability
+        return {
+            .x = self.x + other.x,
+            .y = self.y + other.y
+        };
+    }
+
+    op - fn (self, other: &Vector) -> Vector {
+        return {
+            .x = self.x - other.x,
+            .y = self.y - other.y
+        };
+    }
+}
+
+fn main() {
+    let v1: Vector = Vector { x = 1.5, y = 2.5 };
+    let v2: Vector = Vector { x = 3.0, y = 1.0 };
+
+    let v3 = v1 + v2; // Calls overloaded +
+    let v4 = v1 - v2; // Calls overloaded -
+
+    print(f"Vector v3: ({v3.x}, {v3.y})");
+    print(f"Vector v4: ({v4.x}, {v4.y})");
+}
+```
+
+---
+
+### Overloading the Cast Operator (`as`)
+
+Structs can define custom casting behavior with the `as` operator. This allows explicit conversions between types.
+
+#### Example: Custom Cast Operator
+```helix
+struct Point {
+    x: int;
+    y: int;
+
+    op as fn (self) -> string {
+        return f"Point({self.x}, {self.y})";
+    }
+}
+
+fn main() {
+    let p     = Point { x = 10, y = 20 };
+    let p_str = p as string; // Calls the custom cast operator
+
+    // NOTE: `as string` is implicitly called in the print function if not explicitly cast.
+    print(p_str); // Output: Point(10, 20)
+}
+```
+
+---
+
+### Extending Structs
+
+Structs can be extended to add new fields or operators. This allows you to expand the functionality of existing structs without modifying their original definition.
+
+#### Example: Extending a Struct
+```helix
+interface Addable {
+    op + fn (self, other: &Addable) -> &Addable;
+}
+
+struct Point {
+    let x: int;
+    let y: int;
+}
+
+// Extending Point to implement Addable
+extend Point with Addable {
+    op + fn (self, other: &Point) -> &Point {
+        self.x += other.x;
+        self.y += other.y;
+
+        return self;
+    }
+}
+
+fn main() {
+    let p1 = Point { x = 10, y = 20 };
+    let p2 = Point { x = 5,  y = 15 };
+
+    let p3 = p1 + p2; // Calls the overloaded + operator
+    print(f"New Point: ({p3.x}, {p3.y})");
+}
+```
+
+<Aside type="note" title="Extending Structs">
+This example demonstrates how to extend a struct to implement additional functionality. For more details on extending structs, refer to the [Extending Types](../extending-types.mdx) guide.
+</Aside>
+
+---
+
+### Best Practices for Structs
+
+<Aside type="tip" title="Tips for Struct Usage">
+1. **Use for Data Only**: Restrict structs to data storage. For behavior, use classes or interfaces.
+2. **Prefer Anonymous Operators**: Overload operators only when it makes intuitive sense for the type.
+3. **Use Generics Wisely**: Leverage `requires` for flexibility but avoid unnecessary complexity.
+4. **Document Casting Behavior**: Always document any custom cast operators to ensure clarity for users.
+</Aside>
+
+---
+
+### Conclusion
+
+Structs in Helix are lightweight and efficient for storing aggregate data. By restricting their functionality to fields and anonymous operators, Helix ensures that structs remain simple and focused on their purpose.
+
+For more information:
+- Refer to [Requires](../requires.mdx) for advanced details on generics and constraints.
+- Explore [Operators](../operators.mdx) for a comprehensive guide to operator overloading in Helix.

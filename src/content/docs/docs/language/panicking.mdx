@@ -1,0 +1,292 @@
+---
+title: Panicking
+description: Comprehensive guide to the `panic` statement in Helix, its behavior, and best practices for error handling.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Panic in Helix
+
+In Helix, **`panic`** is a special statement used to signal an error by returning it as the function's state. It works differently from exceptions in other languages, behaving closer to the `return` statement that carries an error instead of a value, while still propagating errors through the type system.
+
+`panic` requires the function's return type to be:
+- A **questionable type (`?`)**
+- Or a **standard error type (`std::Error::<T, E...>`)**, where:
+  - `T` is the result type.
+  - `E` is one or more possible error types. (can be any type or a derivative of `std::BaseError`)
+
+<Aside type="caution" title="Panic vs. Exceptions">
+- `panic` does not directly crash the program. Instead, it propagates errors through the type system, ensuring robust and predictable error handling.
+- it also keeps track of the stack trace. to pretty print the stack trace.
+- `panic` does crash the program if the theres an error and the variable is not checked.
+
+- if you want to hard crash the program, you can use `std::crash(E)` instead. (this is not recommended in most cases)
+</Aside>
+
+---
+
+### How Panic Works
+
+#### With Questionable Types (`?`)
+
+When a function's return type is a questionable type, `panic` sets the return value to an error. This value can then be validated using `...?` or `error in ...` syntax.
+Refer to the [Questionable Types Guide](../questionable-types) for more details on questionable types.
+
+```helix
+import std::errors;
+
+fn divide(a: int, b: int) -> int? {
+    if b == 0:
+        panic errors::ParseError("Cannot divide by zero");
+    
+    return a / b;
+}
+
+fn main() {
+    let result: int? = divide(10, 0);
+
+    if errors::ParseError in result {
+        print("Error: Division by zero.");
+    } else if result? {
+        print(f"Result: {result}");
+    }
+}
+```
+
+#### With `std::Error::<T, E...>`
+
+When using `std::Error`, `panic` sets the error state, and valid results must be explicitly accessed with the `*` operator.
+
+```helix
+import std::errors;
+
+fn divide(a: int, b: int) -> std::Error::<int, errors::ParseError> {
+    if b == 0:
+        panic errors::ParseError("Cannot divide by zero");
+    
+    return a / b;
+}
+
+fn main() -> int {
+    let result: std::Error::<int, errors::ParseError> = divide(10, 0);
+
+    if result.has_value() {
+        let value = *result;
+        print(f"Result: {value}");
+    } else {
+        print("Error: Division by zero.");
+    }
+    
+    return 0;
+}
+```
+
+---
+
+### Example of Invalid Panic Usage
+
+```helix
+import std::errors;
+
+fn divide(a: int, b: int) -> int? {
+    if b == 0:
+        panic errors::ParseError("Division by zero");
+    
+    return a / b;
+}
+
+fn main() {
+    // we are trying to downgrade the int? to an int this will
+    // crash the program IF the int? does not have a value.
+    // (in this case it does not)
+
+    let result: int = divide(10, 0); // program will crash here, implicitly.
+    print(f"Result: {result}");
+}
+```
+
+**What's Wrong**:
+- The function `divide` returns an `int?` but is assigned to an `int`.
+- This is valid since `int?` can be implicitly converted to `int`. However thats only the case if the `int?` has a value.
+- If the `int?` does not have a value, the program will crash. if you try to use it as an `int`.
+
+<Aside type="note" title="Note">
+- by default assigning an function or anything that returns a questionable to a let without a type would be inferred as the questionable type.
+- While a questionable type has the EXACT same methods as the type it wraps, if you try to use any of the methods on a questionable type that does not have a value, the program will crash.
+</Aside>
+
+---
+
+```helix
+import std::errors;
+
+fn oo_we() -> int {
+    panic errors::ParseError("Look at me, I'm a pickle!");
+}
+
+fn main() {
+    let result = oo_we(); // would fail compilation.
+    print(f"Result: {result}");
+}
+```
+
+**What's Wrong**:
+- The function `oo_we` returns an `int` but has a `panic` statement. This will fail compilation.
+- The return type of a function must have either a questionable type or a `std::Error` type if the function can panic.
+
+---
+
+### Examples of Panic Usage
+
+<Tabs>
+<TabItem label="Input Validation">
+```helix
+import std::errors;
+
+fn parse_age(input: string) -> int? {
+    let age: int? = input as int?;
+    if !(age?):
+        panic errors::ParseError("Invalid age provided");
+
+    return age;
+}
+
+fn main() {
+    let age = parse_age("not-a-number");
+
+    if errors::ParseError in age:
+        print("Failed to parse age.");
+    else if age?:
+        print(f"Valid age: {age}");
+}
+```
+**What It Does**:
+- Validates user input and panics with an error if parsing fails.
+- Demonstrates error handling with questionable types.
+</TabItem>
+
+<TabItem label="Chained Operations with Errors">
+```helix
+fn divide(a: int, b: int) -> std::Error::<int, errors::DivideByZero> {
+    if b == 0 {
+        panic errors::DivideByZero("Division by zero");
+    }
+
+    return a / b;
+}
+
+fn calculate(a: int, b: int) -> std::Error::<int, errors::DivideByZero> {
+    let result = divide(a, b);
+    
+    if result.has_error() {
+        return result.error();
+    }
+
+    return *result * 2; // requires explicit value extraction with `*`. (will crash if the result is an error)
+}
+
+fn main() {
+    let final_result = calculate(10, 0);
+
+    if final_result.has_value() {
+        print(f"Final result: {*final_result}");
+    } else {
+        print("Calculation failed due to division by zero.");
+    }
+}
+```
+**What It Does**:
+- Chains multiple operations while handling errors with `std::Error`.
+- Uses `*` to extract valid values for further calculations.
+</TabItem>
+
+<TabItem label="Early Error Propagation">
+```helix
+fn check_positive(value: int) -> int? {
+    if value <= 0 {
+        panic errors::InvalidArgument("Value must be positive");
+    }
+    return value;
+}
+
+fn compute(value: int) -> int? {
+    let checked = check_positive(value);
+
+    if checked? {
+        return checked * 2;
+    }
+
+    return checked; // propagates the error.
+}
+
+fn main() {
+    let result = compute(-5);
+
+    if errors::InvalidArgument in result {
+        print("Error: Value must be positive.");
+    } else if result? {
+        print(f"Computation result: {result}");
+    }
+}
+```
+**What It Does**:
+- Propagates errors early using `panic` in helper functions.
+- Prevents invalid values from progressing through computations.
+</TabItem>
+</Tabs>
+
+---
+
+### Best Practices for Panic
+
+<Aside type="tip" title="Tips for Using Panic">
+1. **Choose the Right Return Type**:
+   - Use `?` for lightweight error handling.
+   - Use `std::Error::<T, E...>` for scenarios with multiple error types or detailed handling.
+2. **Handle Panics Gracefully**:
+   - Always validate results using `...?`, `error in ...`, or `.has_value()`.
+3. **Be Predictable**:
+   - Document all possible panics in your functions for clarity.
+</Aside>
+
+---
+
+### Common Mistakes
+
+#### Forgetting Explicit Value Extraction
+```helix
+fn divide(a: int, b: int) -> std::Error::<int, errors::DivideByZero> {
+    if b == 0:
+        panic errors::DivideByZero("Cannot divide by zero");
+
+    return a / b;
+}
+
+fn main() {
+    let res = divide(10, 2);
+    let value = res; // Error: Cannot assign without dereferencing. Since res is
+                     //        a std::Error::<int, errors::DivideByZero> and not a
+                     //        questionable type.
+
+    let correct_value = *res; // Correct way to extract the value.
+}
+```
+
+#### Skipping Validity Checks
+```helix
+fn faulty_function() -> int?:
+    panic errors::Unexpected("This will fail");
+
+fn main() {
+    let result = faulty_function(); // no crash here but the program will crash if you try to use result.
+    print(result); // Error: Unexpected: "This will fail" (crash)
+}
+```
+
+---
+
+### Conclusion
+
+The **`panic` statement** in Helix is a powerful and integrated error-handling mechanism. By leveraging questionable types (`?`) or `std::Error::<T, E...>`, you can create predictable and robust error propagation paths.
+
+Ensure every `panic` is handled gracefully with checks (`...?`, `error in ..`, `.has_value()`) and explicitly extract values where needed. This design keeps Helix code clean, safe, and predictable.

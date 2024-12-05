@@ -1,0 +1,258 @@
+---
+title: Questionable
+description: Comprehensive guide to using questionable types in Helix, their behavior, and best practices for error and null handling.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Questionable Types (?)
+
+In Helix, **questionable types** are used to represent values that might hold one of three states:
+1. A valid value.
+2. `null` (indicating the absence of a value).
+3. An error (indicating an exceptional state).
+
+This feature integrates error handling and null checks directly into the type system, making Helix code concise, robust, and expressive.
+
+<Aside type="tip" title="Why Questionable Types?">
+Questionable types simplify handling potentially invalid or error-prone data. Instead of separate error-handling constructs, they allow errors, null, and values to coexist seamlessly.
+</Aside>
+
+---
+
+#### Declaring Questionable Types
+
+A questionable type is created by appending `?` to a base type. For example:
+- `int?`: A questionable integer.
+- `string?`: A questionable string.
+
+```helix
+let a: int?; // `a` can hold an `int`, `null`, or an error.
+```
+
+---
+
+### Key Behaviors
+
+#### Using Questionable Types
+You can use a questionable type like a regular variable. If you use it in a context where a non-questionable type is required, Helix implicitly checks its validity:
+- If the value is valid, it proceeds.
+- If the value is `null` or an error, the program stops with a crash.
+
+```helix
+fn print_number(n: int):
+    print(n);
+
+let x: int? = 42;
+print_number(x); // Works because `x` has a valid value.
+
+let y: int? = null;
+print_number(y); // crash: `NullError`.
+```
+
+<Aside type="caution" title="Validity Check">
+Using a questionable type directly without ensuring it holds a value (`...?`) will result in a crash if the value is `null` or an error.
+</Aside>
+
+---
+
+### Validity Checks
+
+#### 1. Broad Check with `...?`
+Use `...?` to check if a questionable type holds a valid value:
+```helix
+let x /* inferred: int? */ = input("Enter a number: ") as int?;
+
+if x?:
+    print(f"Valid number: {x}");
+else:
+    print("Invalid input.");
+```
+
+#### 2. Specific Error Detection with `in`
+To detect specific errors, use the `in` keyword:
+```helix
+let result: int? = divide(10, 0);
+
+if error::ParseError in result:
+    print("Division by zero!");
+else if result?:
+    print(f"Result: {result}");
+else:
+    print("Unknown error occurred.");
+```
+
+#### 3. Explicit `null` Checks
+Use `== null` or compare directly to `null` to detect null states:
+```helix
+let value: int? = null;
+
+if value == null:
+    print("Value is null.");
+else if value?:
+    print(f"Value is {value}");
+else:
+    print("An error occurred.");
+```
+
+---
+
+### Assigning Questionable Types
+
+A questionable type can hold one of three states:
+<Tabs>
+    <TabItem label="Valid Value">
+    ```helix
+    let x: int? = 42;
+    ```
+    </TabItem>
+    <TabItem label="Null">
+    ```helix
+    let y: int? = null;
+    ```
+    </TabItem>
+    <TabItem label="Error">
+    - **errors** can not be assigned directly. Since they are the panicked state of a function.
+    - They can be assigned as a result of a function call. but not directly.
+    - refer to [Panic](../panic) for more information.
+    ```helix
+    let x: int? = divide(10, 0); // Holds an error
+    ```
+    </TabItem>
+</Tabs>
+
+---
+
+### Using Questionable Types in Functions
+
+#### Returning Questionable Types
+Functions that may fail or return no value should use questionable types:
+```helix
+fn divide(a: int, b: int) -> int? {
+    if b == 0:
+        panic error::ParseError("Division by zero");
+    
+    return a / b;
+}
+```
+
+#### Accepting Questionable Arguments
+Functions can accept questionable types as arguments and validate them inside:
+```helix
+fn process_number(n: int?) {
+    if n?:
+        print(f"Processing number: {n}");
+    else:
+        print("Invalid number or error.");
+}
+```
+
+---
+
+### Practical Examples
+
+<Tabs>
+<TabItem label="User Input Validation">
+```helix
+fn main() {
+    let input_number: int? = input("Enter a number: ") as int?;
+
+    if input_number?:
+        print(f"You entered: {input_number}");
+    else:
+        print("Invalid input. Please enter a valid number.");
+}
+```
+</TabItem>
+<TabItem label="Error as Control Flow">
+```helix
+fn calculate_area(length: int, width: int) -> int?:
+    if length <= 0 || width <= 0:
+        panic error::InvalidArgumentError("Dimensions must be positive.");
+    return length * width;
+
+fn main():
+    let area: int? = calculate_area(5, -3);
+
+    if error::InvalidArgumentError in area:
+        print("Invalid dimensions provided.");
+    elif area?:
+        print(f"Area: {area}");
+    else:
+        print("Unexpected issue.");
+}
+```
+</TabItem>
+<TabItem label="Aggregating Valid Numbers">
+```helix
+import math;
+
+fn sum_valid_numbers(numbers: list::<int?>) -> int {
+    let total: int = 0;
+
+    for num in numbers {
+        if num?:
+            total += num;
+    }
+
+    return total;
+}
+
+fn get_random_number() -> int? {
+    if math::random::<int>(0, 100) % 2 == 0:
+        return math::random::<int>(0, 100);
+    else if math::random::<int>(0, 100) % 3 == 0:
+        return null;
+    else:
+        panic error::ParseError("Random error");
+}
+
+fn main() {
+    let values: list::<int?>;
+    
+    // Generate 10 random numbers
+    for _ in 0..10 {
+        values.push(get_random_number());
+    }
+
+    let sum = sum_valid_numbers(values);
+    print(f"Sum of valid numbers: {sum}");
+}
+```
+</TabItem>
+</Tabs>
+
+---
+
+### Advantages of Questionable Types
+
+<Aside type="tip" title="Why Use Questionable Types?">
+1. **Simplified Error Handling**: Eliminates the need for extensive error-handling constructs.
+2. **Integrated Null Checks**: Combines null and error handling into one system.
+3. **Safer Code**: Ensures errors are caught before they propagate.
+4. **Conciseness**: Reduces boilerplate with direct error integration.
+4. **Robustness**: Always works interchangeably with the base type and questionable type.
+</Aside>
+
+---
+
+### Common Mistakes
+
+#### Skipping Validity Checks
+**Problem**: Using questionable types without validation.
+```helix
+let x: int? = null;
+print(x); // crash: `NullError`.
+```
+
+**Solution**: Always check validity with `...?` before using:
+```helix
+if x?:
+    print(x);
+```
+
+---
+
+### Conclusion
+
+Questionable types (`?`) in Helix are a powerful tool for managing nullable and error-prone data. By embedding error and null handling into the type system, Helix enables clean, concise, and safe code. Use `...?`, `in`, and `error in ...` to validate questionable types and write robust programs.
