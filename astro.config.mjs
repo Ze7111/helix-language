@@ -1,18 +1,18 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { autolinkConfig } from './plugins/rehype-autolink-config';
-import rehypeSlug from 'rehype-slug';
-import astroI18next from 'astro-i18next';
 import alpinejs from '@astrojs/alpinejs';
-import AstroPWA from '@vite-pwa/astro';
-import icon from 'astro-icon';
+import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
+import tailwind from '@astrojs/tailwind';
+import AstroPWA from '@vite-pwa/astro';
+import astroI18next from 'astro-i18next';
+import icon from 'astro-icon';
+import { defineConfig } from 'astro/config';
 import axios from 'axios';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import { autolinkConfig } from './plugins/rehype-autolink-config';
 
 async function fetchGrammar() {
-    const url = 'https://raw.githubusercontent.com/kneorain/helix-highlighter/main/syntaxes/helix.tmLanguage.json';
+    const url = 'https://raw.githubusercontent.com/helixlang/helix-lsp/lsp-v1/public/syntaxes/helix.tmLanguage.json';
     const response = await axios.get(url);
     return response.data;
 }
@@ -66,57 +66,60 @@ export default defineConfig({
                 replacesTitle: false,
             },
             editLink: {
-                baseUrl: 'https://github.com/kneorain/helix-site/edit/main/docs/',
+                baseUrl: 'https://github.com/helixlang/helix-site/edit/main/docs/',
             },
             social: {
-                github: 'https://github.com/kneorain/helix',
+                github: 'https://github.com/helixlang/helix',
             },
             customCss: ["/src/styles/docstyle.css"],
             expressiveCode: {
-                themes: ['one-dark-pro', 'one-light'],
+                themes: ['github-dark-default', 'github-light-default'],
                 shiki: {
                     langs: [
                         grammar
                     ],
                 },
-                styleOverrides: { borderRadius: '0.2rem' },
+                // border color should be #0b0e12
+                styleOverrides: { borderRadius: '0.3rem', borderWidth: '0rem', borderColor: '#0b0e12', gutterBorderColor: '#0b0e12', codeSelectionBackground: '#0b0e12', scrollbarThumbHoverColor: '#0b0e12', scrollbarThumbColor: '#0b0e12' },
             },
             sidebar: [
                 {
-                    label: 'Welcome To Helix',
+                    label: 'Welcome',
                     link: 'docs',
                 },
                 {
-                    label: 'Introduction',
-                    link: 'docs/introduction',
+                    label: 'Philosophy',
+                    link: 'docs/philosophy',
                 },
                 {
-                    label: 'Installation',
-                    link: 'docs/installation',
+                    label: "Getting Started",
+                    autogenerate: { "directory": "docs/getting-started" }
                 },
                 {
-                    label: 'Getting Started',
-                    autogenerate: { directory: 'docs/getting-started' },
+                    label: "Language",
+                    autogenerate: { "directory": "docs/language" }
                 },
                 {
-                    label: 'Language',
-                    badge: 'New',
-                    autogenerate: { directory: 'docs/language' },
+                    label: "Tooling",
+                    autogenerate: { "directory": "docs/tooling" }
                 },
                 {
-                    label: 'Examples',
-                    badge: 'New',
-                    autogenerate: { directory: 'docs/examples' },
+                    label: "Examples",
+                    "badge": "New",
+                    autogenerate: { "directory": "docs/examples" }
                 },
                 {
-                    label: 'Reference',
-                    autogenerate: { directory: 'docs/reference' },
+                    label: "Reference",
+                    autogenerate: { "directory": "docs/reference" }
                 },
                 {
-                    label: 'Appendix',
-                    badge: 'New',
-                    autogenerate: { directory: 'docs/appendix' },
+                    label: "Contributing",
+                    autogenerate: { "directory": "docs/contributing" }
                 },
+                {
+                    label: "FAQ",
+                    autogenerate: { "directory": "docs/faq" }
+                }
             ],
             tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
             lastUpdated: true,

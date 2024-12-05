@@ -1,0 +1,169 @@
+---
+title: Installation
+---
+
+import { CodeBlock } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+## Installation
+
+Helix is a modern programming language under active development. Depending on your needs, the installation process will differ. Below are two guides: one for end users and another for developers interested in contributing to Helix.
+
+<Tabs>
+    <TabItem label="For Programers">
+        <Aside type="note">
+        As of now, the Helix compiler is still heavily under development. The current version is written in C++ and is not yet feature-complete. The goal is to rewrite the compiler in Helix itself, but this will take time. Your patience and understanding are appreciated as we work toward this goal.
+        </Aside>
+
+        <Aside type="caution" title="Important">
+        The current compiler has a lot of rough edges and is not yet ready for general use. If you're interested in contributing to Helix, please refer to the "For Developers" tab for instructions on building the compiler from source.
+        </Aside>
+
+        # Installing Helix
+
+        Welcome to the installation guide for Helix! This guide will walk you through downloading, installing, and verifying Helix on your system.
+
+        ---
+
+        ## Supported Platforms
+        Helix supports **macOS**, **Linux**, and **Windows**. For other platforms you may need to build/cross-compile from source.
+
+        ---
+
+        ## Downloading Helix
+
+        You can download the latest release of Helix from the [Helix GitHub Releases](https://github.com/helixlang/helix-lang/releases/latest) page.
+
+        Choose the appropriate file for your operating system.
+
+        ---
+
+        ## Installation Steps
+
+        - At this point we don't have an installer but you can download the binary and place it in your path.
+        - Navigate to [Helix GitHub Releases](https://github.com/helixlang/helix-lang/releases/latest) and download the appropriate binary for your target platform.
+        - Extract the downloaded ZIP file to a directory of your choice.
+        - Add the `bin` folder in the extracted directory to your system `PATH`.
+
+        4. **Verify the Installation**
+        ```sh
+        helix --version
+        ```
+
+        ---
+
+        ## Troubleshooting
+
+        ### Common Issues
+        - **`helix: command not found`**
+        - Ensure the `bin` directory is added to your system `PATH`.
+        - Verify the installation path:
+            ```sh
+            echo $PATH
+            ```
+
+        - **Permission Denied** (macOS/Linux)
+        - Ensure you have execution permissions:
+            ```sh
+            chmod +x universal-llvm-macosx/bin/helix
+            ```
+
+        ---
+
+        ## Uninstallation
+
+        - Delete the folder where Helix is installed.
+        - Remove the Helix directory from your system `PATH`.
+
+        ---
+
+        ## Need Help?
+
+        If you encounter any issues during installation, or have questions/suggestions about Helix, feel free to reach out on any of the following platforms:
+
+        - [GitHub Issues](https://github.com/helixlang/helix-lang/issues)
+        - [Helix Community Discussions](https://github.com/helixlang/helix-lang/discussions)
+
+    </TabItem>
+
+    <TabItem label="For Developers">
+        ### Contributing to Helix Development
+
+        <Aside type="caution" title="Important">
+        The current codebase is primarily written in C++ and serves as a stepping stone for Helix's future. While this codebase may seem complex or messy, it's temporary. Our ultimate goal is a complete rewrite of Helix in Helix itself. However, to achieve that, we first need a functional compiler—which is actively being developed in C++.
+        </Aside>
+
+        If you're interested in contributing to Helix—whether it's working on the compiler, the standard library, or other internal projects—this guide will help you get started.
+
+        ---
+
+        #### Prerequisites
+
+        Before you begin, ensure you have the following tools installed:
+
+        1. **C++ Compiler**
+        Helix's compiler requires a modern C++ compiler. Supported options include:
+        - **GCC**: Version 11 or higher
+        - **Clang**: Version 12 or higher
+        - **MSVC**: Version 19.29 or higher
+
+        2. **Xmake**
+        Helix uses [Xmake](https://xmake.io/#/) as its build system. Follow the [Xmake installation guide](https://xmake.io/#/guide/installation) to set it up on your platform.
+
+        3. **LLVM**
+        Helix relies on the LLVM toolchain internally, which is included in the build process. However, ensure that there are no conflicting LLVM installations in your system's path.
+
+        ---
+
+        #### Cloning the Repository
+
+        The Helix source code is hosted on GitHub. To get started, clone the repository:
+
+        ```bash
+        git clone https://github.com/helixlang/helix-lang.git
+        ```
+
+        ---
+
+        #### Building Helix
+
+        Navigate to the Helix source directory and use Xmake to build the project. You can optimize the build process by using multiple threads (`-jN`) and enable verbose output (`-v`) for detailed logs.
+
+        ```bash
+        cd helix-lang
+        xmake -j5 -v
+        xmake run tests # tests are non-comprehensive at this stage
+        ```
+
+        - The build process will compile Helix along with its internal LLVM dependency.
+        - Running `xmake run tests` will execute the project's test suite to verify the build.
+
+        <Aside type="caution" title="Note on LLVM Errors">
+        If you encounter errors related to LLVM during the build, it's likely caused by conflicting LLVM installations on your system. Remove or adjust these conflicting installations from your system's path and try building again.
+        </Aside>
+
+        ---
+
+        #### Getting Involved
+
+        Helix is an open-source project, and contributions from the community are welcome. Here's how you can get started:
+
+        - **Browse Open Issues**: Check out [Helix's GitHub Issues](https://github.com/helixlang/helix-lang/issues) to find tasks you can contribute to.
+        - **Start a Discussion**: If you have ideas or questions, join the [Helix Community Discussions](https://github.com/helixlang/helix-lang/discussions) to connect with other developers.
+        - **Collaborate with the Community**: Whether you're fixing bugs, optimizing performance, or proposing new features, your contributions help shape Helix's future.
+
+        ---
+
+        #### Next Steps
+
+        Once you've set up your environment and built the project, you can:
+        - Explore the codebase to familiarize yourself with the structure and components.
+        - Pick an issue or propose a feature to work on.
+        - Start making meaningful contributions to Helix's development!
+
+        ---
+
+        We look forward to your contributions and thank you for helping build Helix into a powerful and accessible programming language.
+    </TabItem>
+</Tabs>

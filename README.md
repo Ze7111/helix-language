@@ -32,7 +32,7 @@ On the folder run
 1. `bun install`  <small>(or `yarn` or `pnpm i`)</small>
 2. `bun run dev`  <small>(or `yarn dev` or `pnpm dev`)</small>
 
-(if it's not working report an [issue](https://github.com/kneorain/helix-site/issues))
+(if it's not working report an [issue](https://github.com/helixlang/helix-site/issues))
 
 ### Others
 

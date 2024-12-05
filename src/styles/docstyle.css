@@ -1,6 +1,6 @@
 /* Dark mode colors. */
 :root {
-	--sl-color-accent-low: #0C0A09;
+	--sl-color-accent-low: #0b0e12;
 	--sl-color-accent: hsl(281, 90%, 60%);
 	--sl-color-accent-high: hsl(287, 100%, 85%);
 	--sl-color-white: #ffffff;
@@ -9,8 +9,8 @@
 	--sl-color-gray-3: hsl(224, 6%, 56%);
 	--sl-color-gray-4: hsl(224, 7%, 36%);
 	--sl-color-gray-5: hsl(225, 10%, 23%);
-	--sl-color-gray-6: #0C0A09;
-	--sl-color-black: #0C0A09;
+	--sl-color-gray-6: #0b0e12;
+	--sl-color-black: #0b0e12;
 	--sl-color-text-accent: hsl(0, 0%, 100%);
 
     /** icon */

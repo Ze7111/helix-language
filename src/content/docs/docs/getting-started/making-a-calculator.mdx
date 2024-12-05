@@ -1,0 +1,204 @@
+---
+title: A Basic Calculator
+description: Step-by-step guide to creating a calculator in Helix, covering functions, control flow, error handling, and compiling your first program.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Building a Basic Calculator in Helix
+
+This tutorial walks you through building a calculator in Helix. The calculator performs arithmetic operations: addition, subtraction, multiplication, and division. Along the way, you'll explore:
+
+- Defining and using functions
+- Handling `int?` (questionable types)
+- Error management with `panic`
+- Input and control flow with `match`
+
+---
+
+### Step 1: Setting Up the Project
+
+#### Create a Project Directory
+1. Open your terminal and create a directory for your project:
+   ```bash
+   mkdir basic_calculator
+   cd basic_calculator
+   ```
+
+2. Create a file named `calculator.hlx` for your code:
+<Tabs syncKey="operating-platform">
+    <TabItem label="Windows">
+        ```powershell
+        echo. > calculator.hlx
+        ```
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        touch calculator.hlx
+        ```
+    </TabItem>
+</Tabs>
+
+---
+
+### Step 2: Writing the Code
+
+#### Define Arithmetic Functions
+
+Start by defining four functions to handle the arithmetic operations:
+
+```helix
+import std::error;
+
+fn add(a: int, b: int) -> int:
+    return a + b;
+
+fn subtract(a: int, b: int) -> int:
+    return a - b;
+
+fn multiply(a: int, b: int) -> int:
+    return a * b;
+
+// performs division and panics if dividing by zero.
+fn divide(a: int, b: int) -> int? {
+    if b == 0:
+        panic error::ParseError("Division by zero");
+
+    return a / b;
+}
+```
+
+#### Implement the Main Function
+
+The `main` function manages input/output and processes operations:
+
+```helix
+fn main() {
+    let operation: string;
+    let result:    int?;
+    let x:         int?;
+    let y:         int?;
+
+    operation = input("Enter the operation (+, -, *, /): ");
+    x = input("Enter the first number: ")  as int?;
+    y = input("Enter the second number: ") as int?;
+
+    // validate inputs
+    if !(x?) {
+        print("Invalid input. Defaulting to 0.");
+        x = 0;
+    }
+
+    if !(y?) {
+        print("Invalid input. Defaulting to 0.");
+        y = 0;
+    }
+
+    // match operation and calculate
+    result = match operation {
+        "+" -> add(x, y);
+        "-" -> subtract(x, y);
+        "*" -> multiply(x, y);
+        "/" -> divide(x, y);
+        _   -> {
+            print(f"Invalid operation: {operation}");
+            return null;
+        }
+    };
+
+    // handle and display results
+    if result? {
+        print(f"Result: {result}");
+    } else if result has error::ParseError {
+        print("Error: Division by zero");
+    } else {
+        print("Error: Invalid operation");
+    }
+}
+```
+
+---
+
+#### Code Features
+
+1. **Handling Questionable Types (`int?`)**:
+   - `x` and `y` are declared as `int?` since they are directly cast from user input, which could result in an error or `null`.
+   - `...?` checks if a value exists, while `has ...` detects specific errors like `ParseError` similar to `try` and `catch`.
+
+2. **Error Handling**:
+   - Division by zero is prevented in `divide` using a `panic`, which raises a `ParseError` if triggered.
+   - Invalid operations are caught in the `match` block and handled gracefully.
+
+3. **Input Validation**:
+   - Invalid numeric inputs are detected with `!(...?)`, since `...?` returns `true` if theres a value and `false` if it's `null` or an error.
+
+4. **Control Flow**:
+   - The `match` statement determines the operation to perform based on user input.
+
+---
+
+### Step 3: Compiling and Running the Program
+
+#### Compile the Program
+Use the Helix compiler to compile your code:
+```bash
+helix calculator.hlx # automatically generates the binary `calculator`
+```
+
+#### Run the Program
+After compiling, execute the program:
+<Tabs syncKey="operating-platform">
+    <TabItem label="Windows">
+        ```powershell
+        .\calculator.exe
+        ```
+
+    </TabItem>
+    <TabItem label="Unix">
+        ```sh
+        ./calculator
+        ```
+    </TabItem>
+</Tabs>
+
+#### Test the Program
+Try various inputs to test functionality. Example:
+```
+Enter the operation (+, -, *, /): /
+Enter the first number: 10
+Enter the second number: 0
+Error: Division by zero
+```
+
+---
+
+### Code Breakdown
+
+#### Functions
+- **Arithmetic Functions**: Provide clean, reusable logic for basic operations.
+- **Error Management**: The `divide` function handles invalid inputs using `panic` and questionable types (`int?`).
+
+#### Main Function
+- **Input Validation**: Ensures user input is processed safely, falling back to defaults when necessary.
+- **Control Flow**: Uses `match` to map operations to their respective functions.
+- **Error Reporting**: Differentiates between invalid operations and division by zero.
+
+---
+
+### Enhancements and Next Steps
+
+Expand your calculator with additional features:
+- **More Operations**: Add modulus (`%`) or power functions (`x^y`).
+- **Chained Operations**: Support expressions like `1 + 2 * 3`.
+- **Advanced Input Validation**: Provide better feedback for invalid input.
+
+---
+
+### Conclusion
+
+Congratulations! You've built a working calculator in Helix, mastering:
+- Functions and control flow
+- Error handling with `panic` and `int?`
+- Input validation and user interaction
+
+Explore the [Helix Documentation](https://helix-lang.com/docs) for more tutorials and advanced features. Keep building!

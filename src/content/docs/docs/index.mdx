@@ -1,12 +1,66 @@
 ---
-title: Welcome to Helix
+title: Welcome To Helix
+description: A concise introduction to Helix, a powerful and modern programming language for developers.
 ---
 
-Helix is an advanced programming language designed for high performance and seamless interoperability with C++, Rust, and Python. Helix bridges the gap between low-level control and high-level ergonomics, enabling developers to write fast, reliable, and maintainable software without compromise.
+Helix is a modern, compiled programming language designed to empower developers by balancing **high-level expressiveness** with **low-level control**. Built to meet the demands of both system-level programming and application development, Helix offers a toolchain that prioritizes **performance**, **safety**, and **ergonomics**.
 
-## Getting Started
+## **Why Choose Helix?**
 
-Get started with Helix by following our installation guide and writing your first program.
+#### 1. **Performance at Its Core**
+Helix uses the LLVM toolchain** to compile to native machine code, leveraging the power of cutting-edge compiler optimizations to produce fast, predictable binaries. It offers:
+- Low-level access to system resources when needed.
+- Zero-cost abstractions that don't compromise performance or efficiency.
+- Fine-grained control over memory, concurrency, data layout, and more.
 
-- [Installation Guide](docs/getting-started/installation)
-- [Writing Your First Program](docs/getting-started)
+#### 2. **Safety Without Sacrifice**
+Helix eliminates common programming pitfalls with:
+- A **strong, static type system** with the flexibility to express complex data structures in a concise manner.
+- Modern memory safety features, including **automatic memory management where possible** and **manual memory management when necessary**.
+- Optional safeguards for concurrency and resource management.
+
+#### 3. **Developer-Friendly**
+Helix was designed to be intuitive for developers:
+- Syntax inspired by modern languages with a major emphasis on readability and expressiveness.
+- Comprehensive tooling for code formatting, linting, and testing. (*coming soon, if you are interested in contributing, please check our [GitHub repository](https://www.github.com/helixlang/helix-lang)*)
+- Partially batteries-included standard library that covers common use cases and provides a solid foundation for building programs.
+
+#### 4. **Built for Scale**
+From embedded systems to enterprise applications, Helix scales effortlessly. Its modular design allows for:
+- Cross-platform development with consistent behavior since the core of helix only needs libc with the ability to run on bare-metal.
+- Extensible architecture that supports custom tooling and libraries.
+- Seamless integration with existing codebases and ecosystems.
+
+---
+
+## Key Features
+
+#### Memory Management
+Helix adopts a **hybrid approach to memory management**, offering flexibility and safety to cater to diverse development needs:
+- **Automatic Memory Management**
+  By default, Helix leverages a **borrow checker** to enforce compile-time memory safety. This ensures that developers can write efficient and safe code without needing to manually manage lifetimes or ownership.
+  - If the borrow checker cannot validate memory safety in certain contexts, Helix seamlessly transitions to using **smart pointers** to guarantee runtime safety.
+  - In rare cases where neither compile-time nor runtime safety can be ensured automatically, the developer is prompted to address memory handling explicitly, providing clear feedback to resolve issues.
+
+- **Manual Memory Management**
+  For scenarios requiring maximum control, Helix empowers developers with the option to manage memory manually.
+  - Developers can bypass the borrow checker when necessary, enabling **unsafe** constructs such as **raw pointers** to fine-tune performance or interface with lower-level systems.
+  - This approach allows advanced use cases while maintaining explicit boundaries for code that bypasses Helix's safety guarantees.
+This dual model ensures that Helix provides the **ease of use and safety** modern developers expect while preserving the **granular control** demanded by low-level programming.
+
+#### Concurrency Made Simple
+Harness modern multi-core processors with Helix's:
+- **Lightweight, ergonomic concurrency model** that abstracts away the complexities of parallel programming using spawn/thead.
+- **Actor-based concurrency** for building scalable, fault-tolerant systems.
+- **Asynchronous programming** with built-in support for futures and async/await syntax.
+
+#### Interoperability
+Helix seamlessly interacts with other languages:
+- Easy-to-use FFI for C/C++ interoperability.
+- Support for binding Helix to work with other languages like Python, Ruby, and JavaScript. (*coming soon* - refer to the tooling section for more information).
+
+---
+
+Helix is the language that adapts to your needs—whether you're building performance-critical systems or expressive, maintainable applications. Explore the journey ahead and see why Helix is the next evolution in programming.
+
+** Helix at the current stage uses a an intermediate C++ backend to get to the LLVM IR, but we are planing to move to the LLVM IR directly in the future.

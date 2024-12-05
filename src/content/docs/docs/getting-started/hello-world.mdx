@@ -39,7 +39,7 @@ To run your compiled program, use the following command:
 Unix is also MacOS, Linux and Linux like operating systems.
 :::
 
-<Tabs>
+<Tabs syncKey="operating-platform">
     <TabItem label="Windows">
         ```powershell
         .\main.exe
@@ -147,7 +147,7 @@ helix main.hlx -o hello_world --debug
 
 After compiling successfully, Helix outputs a binary executable. On Linux, macOS, and PowerShell on Windows, you can see the executable by entering the `ls` command in your shell:
 
-<Tabs>
+<Tabs syncKey="operating-platform">
     <TabItem label="Windows">
         ```powershell
         dir /B
@@ -171,7 +171,7 @@ After compiling successfully, Helix outputs a binary executable. On Linux, macOS
 This shows the source code file with the `.hlx` extension and the executable file (`hello_world.exe` on Windows, but `hello_world` on other platforms). From here, you run the executable file like this:
 You would also notice a file with the `.pdb` extension if your on windows, thats used by the debugger to understand errors and tracebacks, to allow you to see what bugs there are in your code if any.
 
-<Tabs>
+<Tabs syncKey="operating-platform">
     <TabItem label="Windows">
         ```powershell
         .\hello_world.exe
@@ -183,7 +183,6 @@ You would also notice a file with the `.pdb` extension if your on windows, thats
         ./hello_world
         ```
     </TabItem>
-
 </Tabs>
 
 If your `main.hlx` is your “Hello, World!” program, this line prints `Hello, World!` to your terminal.
@@ -192,4 +191,4 @@ Helix is an ahead-of-time compiled language, meaning you can compile a program a
 
 Just compiling with `helix` is fine for simple programs, but as your project grows, you'll want to manage all the options and make it easy to share your code. Future sections will introduce tools and best practices for writing real-world Helix programs.
 
-Happy coding!
+Happy coding! 🚀

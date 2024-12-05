@@ -1,10 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import Container from "@components/container.astro";
 import Layout from "@layouts/Layout.astro";
 import { getArticleReadingTime } from "@utils/blog";
 import { localizePath } from "astro-i18next";
 import { Icon } from "astro-icon/components";
+import { getCollection } from "astro:content";
 import i18next, { changeLanguage } from "i18next";
 
 changeLanguage("en");
@@ -86,7 +86,7 @@ const readTime = getArticleReadingTime(post.body);
 				initGiscus: function() {
 					let script = document.createElement('script');
 					script.src = 'https://giscus.app/client.js';
-					script.dataset.repo = 'kneorain/helix-site';
+					script.dataset.repo = 'helixlang/helix-site';
 					script.dataset.repoId = 'R_kgDOGa6DOg';
 					script.dataset.category = 'Blog';
 					script.dataset.categoryId = 'DIC_kwDOGa6DOs4CXazF';
