@@ -55,6 +55,8 @@
     "workbox-window": "^7.3.0"
   },
   "trustedDependencies": [
-    "@biomejs/biome"
+    "@biomejs/biome",
+    "esbuild",
+    "sharp"
   ]
 }
