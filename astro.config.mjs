@@ -66,7 +66,7 @@ export default defineConfig({
                 replacesTitle: false,
             },
             editLink: {
-                baseUrl: 'https://github.com/helixlang/helix-site/edit/main/docs/',
+                baseUrl: 'https://github.com/helixlang/helix-site/edit/new-template/src/content/docs/docs/',
             },
             social: {
                 github: 'https://github.com/helixlang/helix',
